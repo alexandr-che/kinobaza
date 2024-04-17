@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load movie_tags %}
+
+
+{% block content %}
+
+<div class="container">
+    {% about_movie movie %}
+    <div class="row">
+        <div class="col">
+            <div class="movie-desc mt-3 mx-1">
+                {{ movie.description }}<br>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            {% show_comments %}
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}

@@ -1,0 +1,19 @@
+{% load movie_tags %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            Панель навигации<hr>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <p>По категории</p>
+            {% show_categories %}
+        </div>
+        <div class="col-6">
+            <p>По годам</p>
+            {% show_years %}
+        </div>
+    </div>
+</div>

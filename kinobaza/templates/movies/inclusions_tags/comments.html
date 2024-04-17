@@ -1,0 +1,8 @@
+{% for comment in comments %}
+
+    {{ comment.user.username }}<br>
+    {{ comment.user.avatar.url }}<br>
+    {{ comment.created_by }}<br>
+    {{ comment.comment }}<br>
+
+{% endfor %}

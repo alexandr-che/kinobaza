@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load movie_tags %}
+
+{% block content %}
+
+
+{% for movie in movies %}
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            {% about_movie movie %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="col movie-desc-list">
+            {{ movie.description|truncatechars:250 }}
+        </div>
+    </div><hr>
+</div>
+
+{% endfor %}
+
+
+{% endblock content %}
