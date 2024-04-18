@@ -1,12 +1,16 @@
 <div class="about-movie m-1">
     <div class="movie-header mb-2">                
         <div class="row">
-            <div class="col-5">
+            <div class="col-6">
                 <div class="title-movie">
-                    {{ movie.title }} ({{ movie.year }})
+                    <span class="link-title-movie">
+                        <a href="{% url "movies:movie_detail" slug=movie.slug %}">
+                            {{ movie.title }} ({{ movie.year }})
+                        </a>
+                    </span>
                 </div>
             </div>
-            <div class="col-4"></div>
+            <div class="col-3"></div>
             <div class="col-3">
                 Рейтинг {{ movie.calc_rate }}/10<br>
                 <div class="count-vote">

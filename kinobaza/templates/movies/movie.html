@@ -8,17 +8,16 @@
     {% about_movie movie %}
     <div class="row">
         <div class="col">
-            <div class="movie-desc mt-3 mx-1">
+            <div class="movie-desc my-3 mx-1">
                 {{ movie.description }}<br>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col">
-            {% show_comments %}
+            {% show_comments movie %}
         </div>
     </div>
 </div>
-
 
 {% endblock content %}

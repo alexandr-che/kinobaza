@@ -23,8 +23,8 @@ def about_movie(movie):
 
 
 @register.inclusion_tag('movies/inclusions_tags/comments.html')
-def show_comments():
-    comments = Comment.objects.all()
+def show_comments(movie):
+    comments = movie.to_movie.filter(to_movie=movie.pk)
     return {'comments': comments}
 
 

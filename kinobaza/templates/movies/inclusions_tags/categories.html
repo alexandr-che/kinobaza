@@ -1,3 +1,5 @@
 {% for genre in genres %}
-    {{ genre.name }}<br>
+    <span class="link-sidebar">
+        <a href="{% url "movies:movie_list_cats" slug=genre.slug %}">{{ genre.name }}</a><br>
+    </span>
 {% endfor %}
