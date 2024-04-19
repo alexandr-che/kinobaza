@@ -1,5 +1,5 @@
 {% for year in years %}
-    <span class="link-sidebar">
-        <a href="{% url "movies:movie_list_year" int=year%}">{{ year }}</a><br>
-    </span>
+    {% comment %} <span class="link-sidebar">
+        <a href="{% url "movies:movie_list_find" slug=year%}">{{ year }}</a><br>
+    </span> {% endcomment %}
 {% endfor %}

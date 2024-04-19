@@ -43,21 +43,20 @@ class Movie(models.Model):
         return self.title
     
     def calc_rate(self):
-        ratings = Rating.objects.filter(movie=self.pk)
-
+        ratings = Rating.objects.filter(movie=self)
         total = 0
         for obj in ratings:
             total += obj.rate
 
         try:
-            total = round(total/len(ratings), 1)
+            total = round(total/ratings.count(), 1)
         except ZeroDivisionError:
             return 0
 
         return total
     
     def count_vote(self):
-        count = len(Rating.objects.filter(movie=self.pk))
+        count = Rating.objects.filter(movie=self.pk).count()
         return count
     
 

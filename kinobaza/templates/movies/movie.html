@@ -5,7 +5,7 @@
 {% block content %}
 
 <div class="container">
-    {% about_movie movie %}
+    {% include "movies/inclusions/about_movie.html" %}
     <div class="row">
         <div class="col">
             <div class="movie-desc my-3 mx-1">
@@ -15,9 +15,9 @@
     </div>
     <div class="row">
         <div class="col">
-            {% show_comments movie %}
+            {{ comments.all }}
         </div>
     </div>
 </div>
-
+{{ comments }}
 {% endblock content %}

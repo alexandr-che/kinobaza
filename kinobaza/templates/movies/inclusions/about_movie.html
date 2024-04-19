@@ -1,0 +1,66 @@
+<div class="about-movie m-1">
+    <div class="movie-header mb-2">                
+        <div class="row">
+            <div class="col-6">
+                <div class="title-movie">
+                    <span class="link-title-movie">
+                        <a href="{% url "movies:movie_detail" slug=movie.slug %}">
+                            {{ movie.title }} ({{ movie.year }})
+                        </a> 
+                    </span>
+                </div>
+            </div>
+            <div class="col-3"></div>
+            <div class="col-3">
+                Рейтинг {{ movie.calc_rate }}/10<br>
+                <div class="count-vote">
+                    {{ movie.count_vote }} голосов
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <img src="{{ movie.poster.url }}">
+        </div>
+        <div class="col-8">
+            Год выпуска: <span class="link-tags">
+                <a href="{% url "movies:movie_list_find" %}?f=year&v={{ movie.year }}">
+                    {{ movie.year }}
+                </a>
+            </span><br>
+            Страна: <span class="link-tags">
+                        {% for country in movie.country.all %}
+                            <a href="{% url "movies:movie_list_find" %}?f=country&v={{ country }}">
+                                {{ country }}
+                            </a>
+                        {% endfor %}
+                    </span><br>
+            Жанр:   <span class="link-tags">
+                        {% for genre in movie.genre.all %}
+                            <a href="{% url "movies:movie_list_find" %}?f=genre&v={{ genre }}">
+                                {{ genre }}
+                            </a>
+                        {% endfor %}
+                    </span><br>
+            Продолжительность: {{ movie.duration }} мин<br>
+
+            <p>Качество: {{ movie.quality }}</p>
+
+            Режиссёр:   <span class="link-tags">
+                            {% for director in movie.director.all %}
+                                <a href="{% url "movies:movie_list_find" %}?f=director&v={{ director }}">
+                                    {{ director }}
+                                </a>
+                            {% endfor %}
+                        </span><br>
+            Актёры: <span class="link-tags">
+                        {% for actor in movie.actors.all %}
+                            <a href="{% url "movies:movie_list_find" %}?f=actors&v={{ actor }}">
+                                {{ actor }}
+                            </a>
+                        {% endfor %}
+                    </span><br>
+        </div>
+    </div>
+</div>
