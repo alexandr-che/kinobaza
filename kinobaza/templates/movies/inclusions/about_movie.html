@@ -6,15 +6,19 @@
                     <span class="link-title-movie">
                         <a href="{% url "movies:movie_detail" slug=movie.slug %}">
                             {{ movie.title }} ({{ movie.year }})
-                        </a> 
+                        </a>
                     </span>
                 </div>
             </div>
             <div class="col-3"></div>
             <div class="col-3">
-                Рейтинг {{ movie.calc_rate }}/10<br>
+                {% if movie.rate == None %}
+                    Рейтинг 0/10<br>
+                {% else %}
+                    Рейтинг {{ movie.rate }}/10<br>
+                {% endif %}
                 <div class="count-vote">
-                    {{ movie.count_vote }} голосов
+                    {{ movie.vote_count }} голосов
                 </div>
             </div>
         </div>

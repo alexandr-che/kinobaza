@@ -12,13 +12,13 @@ def show_comments(movie):
     return {'comments': comments}
 
 
-@register.inclusion_tag('movies/inclusions_tags/categories.html')
-def show_categories():
+@register.inclusion_tag('movies/inclusions_tags/genres.html')
+def show_genres():
     genres = Genre.objects.all()
     return {'genres': genres}
 
 
 @register.inclusion_tag('movies/inclusions_tags/years.html')
 def show_years():
-    years = [year.get('year') for year in Movie.objects.values('year')]
+    years = sorted([year[0] for year in Movie.objects.values_list('year')])
     return {'years': years}
