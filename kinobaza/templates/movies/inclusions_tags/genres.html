@@ -1,0 +1,5 @@
+{% for genre in genres %}
+    <span class="link-sidebar">
+        <a href="{% url "movies:movie_list_find" %}?f=genre&v={{ genre.name }}">{{ genre.name }}</a><br>
+    </span>
+{% endfor %}

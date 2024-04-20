@@ -42,24 +42,6 @@ class Movie(models.Model):
     def __str__(self):
         return self.title
     
-    def calc_rate(self):
-        ratings = Rating.objects.filter(movie=self.pk)
-
-        total = 0
-        for obj in ratings:
-            total += obj.rate
-
-        try:
-            total = round(total/len(ratings), 1)
-        except ZeroDivisionError:
-            return 0
-
-        return total
-    
-    def count_vote(self):
-        count = len(Rating.objects.filter(movie=self.pk))
-        return count
-    
 
 class Comment(models.Model):
     comment = models.TextField(max_length=1000, blank=True, null=True, verbose_name='Текст комментария')
