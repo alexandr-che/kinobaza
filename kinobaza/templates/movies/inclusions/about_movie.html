@@ -12,11 +12,7 @@
             </div>
             <div class="col-3"></div>
             <div class="col-3">
-                {% if movie.rate == None %}
-                    Рейтинг 0/10<br>
-                {% else %}
-                    Рейтинг {{ movie.rate }}/10<br>
-                {% endif %}
+                Рейтинг {{ movie.rate|default_if_none:"0" }}/10<br>
                 <div class="count-vote">
                     {{ movie.vote_count }} голосов
                 </div>
