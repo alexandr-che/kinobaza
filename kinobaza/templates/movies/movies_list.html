@@ -3,6 +3,31 @@
 
 {% block content %}
 
+<form action="{% url "movies:movie_list" %}">
+    <div class="row">
+        <div class="col-12">
+            Сортировка:
+        </div>
+        <div class="col">
+            {{ movie_filter.form.year }}
+            {% comment %} {% for item in movie_filter.form.year %}                
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                    <label class="form-check-label" for="flexCheckDefault">
+                        {{ item }}
+                    </label>
+                </div>
+            {% endfor %} {% endcomment %}
+        </div>
+        <div class="col">
+            {{ movie_filter.form.genre }}
+        </div>
+        <div class="col">
+            {{ movie_filter.form.country }}
+        </div>
+        <input type="submit">
+    </div>
+</form>
 
 {% for movie in movies %}
 

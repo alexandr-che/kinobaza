@@ -1,6 +1,8 @@
 from django import template
+from django.db.models import Prefetch
 
-from movies.models import Comment, Genre, Movie
+from movies.models import Genre, Movie, Comment
+from users.models import User
 
 
 register = template.Library()
@@ -8,7 +10,11 @@ register = template.Library()
 
 @register.inclusion_tag('movies/inclusions_tags/comments.html')
 def show_comments(movie):
-    comments = movie.to_movie.filter(to_movie=movie.pk)
+    user_fields = ('username', 'avatar')
+    comments = Comment.objects.filter(
+        to_movie=movie.pk).prefetch_related(
+            Prefetch('user', queryset=User.objects.only(*user_fields))
+        )
     return {'comments': comments}
 
 
@@ -20,5 +26,5 @@ def show_genres():
 
 @register.inclusion_tag('movies/inclusions_tags/years.html')
 def show_years():
-    years = sorted([year[0] for year in Movie.objects.values_list('year')])
+    years = Movie.objects.values_list('year', flat=True).order_by('year')
     return {'years': years}
