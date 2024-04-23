@@ -4,28 +4,29 @@
     </div>
 </div><hr>
 
-{% for comment in comments %}
-
-    <div class="row">
-        <div class="col-1">
-            <span class="comm-user-avatar">
-                <img src="{{ comment.user.avatar.url }}">
-            </span>
+{% if not comments %}
+    <span>Пока нет комментариев...</span>
+{% else %}
+    {% for comment in comments %}
+        <div class="row">
+            <div class="col-1">
+                <span class="comm-user-avatar">
+                    <img src="{{ comment.user.avatar.url }}">
+                </span>
+            </div>
+            <div class="col-2">
+                {{ comment.user.username }}
+            </div>
+            <div class="col-3">
+                <span class="date-comm">
+                    {{ comment.created_by }}
+                </span>
+            </div>
         </div>
-        <div class="col-2">
-            {{ comment.user.username }}
+        <div class="row">
+            <div class="col-12">
+                <p>{{ comment.comment }}</p>
+            </div><hr>
         </div>
-        <div class="col-3">
-            <span class="date-comm">
-                {{ comment.created_by }}
-            </span>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <p>{{ comment.comment }}</p>
-        </div><hr>
-    </div>
-
-
-{% endfor %}
+    {% endfor %}
+{% endif %}
