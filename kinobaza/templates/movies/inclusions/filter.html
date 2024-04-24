@@ -1,0 +1,35 @@
+<form class="filter" action="{% url "movies:movie_list" %}">
+    <div class="row">
+        <div class="col-12">
+            Сортировка:
+        </div>
+
+        {% for filter in movie_filter.form %}
+            <div class="col">
+                <button class="btn btn-secondary btn-sm" type="button" data-bs-toggle="collapse"
+                data-bs-target="#{{ filter.name }}" aria-expanded="true" aria-controls="{{ filter.name }}">
+                    {{ filter.label }}
+                </button>
+                <div class="collapse" id="{{ filter.name }}">
+                    <div class="list-{{ filter.name }}">
+                        <div class="row">
+                            {% for item in filter %}
+                            <div class="col">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox"
+                                    value="{{ item.data.value }}" id="id_{{ filter.name }}" name="{{ filter.name }}">
+                                    <label class="form-check-label" for="id_{{ filter.name }}">
+                                        {{item}}
+                                    </label>
+                                </div>
+                            </div>               
+                            {% endfor %}
+                            <input type="submit" value="Применить">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</form>
+<hr>
