@@ -42,12 +42,11 @@ class MovieListView(ListView):
             if field_from_get == 'year':
                 queryset = queryset.filter(year=value_from_get)
             else:      
-                key = f'{field_from_get}__name__icontains'
-                filter_movie = {key: value_from_get}
-                
                 fields = ['country', 'director', 'actors', 'genre']
 
                 if field_from_get in fields:
+                    key = f'{field_from_get}__name__icontains'
+                    filter_movie = {key: value_from_get}                
                     queryset = queryset.filter(**filter_movie)
 
         # Агрегация для вычисления среднего рейтинга и количества голосов
