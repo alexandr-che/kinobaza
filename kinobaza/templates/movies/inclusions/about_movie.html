@@ -12,7 +12,7 @@
             </div>
             <div class="col-3"></div>
             <div class="col-3">
-                Рейтинг {{ movie.rate|default_if_none:"0" }}/10<br>
+                Рейтинг {{ movie.rate|default_if_none:"0" }}<br>
                 <div class="count-vote">
                     {{ movie.vote_count }} голосов
                 </div>

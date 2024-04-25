@@ -58,9 +58,8 @@ class Comment(models.Model):
     
 
 class Rating(models.Model):
-    rate = models.SmallIntegerField(validators=[
-        MinValueValidator(1), MaxValueValidator(10)
-    ])
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    rate = models.ForeignKey('StarRating', on_delete=models.CASCADE)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='movie')
 
     class Meta:
@@ -69,6 +68,16 @@ class Rating(models.Model):
 
     def __str__(self):
         return f'Рейтинг к фильму {self.movie.title}'
+    
+
+class StarRating(models.Model):
+    star = models.SmallIntegerField()
+
+    class Meta:
+        ordering = ['-star']
+
+    def __str__(self):
+        return f'{self.star}'
 
 
 class Country(models.Model):
