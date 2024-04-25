@@ -1,0 +1,12 @@
+<form action="{% url "movies:movie_detail" slug=movie.slug %}" name="rating" method="post">
+    Оцените фильм:
+    {% csrf_token %}
+    <input type="hidden" value={{ movie.id }} name="movie">
+    <span class="rating">
+        {% for k, v in rating_form.fields.star.choices %}
+            <input type="radio" name="rate" id="rating{{ v }}" value="{{ k }}"
+            {% if user_rating == k %}checked{% endif %}>            
+            <label for="rating{{ v }}">{{ k }}</label>
+        {% endfor %}
+    </span>
+</form>
