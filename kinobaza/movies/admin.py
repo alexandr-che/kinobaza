@@ -10,6 +10,7 @@ admin.site.register(StarRating)
 class MovieAdmin(admin.ModelAdmin):
     fields = [
         ('title', 'slug', 'link_movie'),
+        
         ('year', 'duration', 'quality', 'poster'),
         'description',
         ('actors', 'director', 'genre', 'country')
