@@ -1,6 +1,6 @@
 from django import forms
 
-from movies.models import StarRating, Rating
+from movies.models import StarRating, Rating, Comment
 
 
 class RatingForm(forms.ModelForm):
@@ -14,3 +14,11 @@ class RatingForm(forms.ModelForm):
     class Meta:
         model = Rating
         fields = ('rate',)
+
+
+class CommentForm(forms.ModelForm):
+    comment = forms.Textarea()
+
+    class Meta:
+        model = Comment
+        fields = ('comment',)

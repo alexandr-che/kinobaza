@@ -1,12 +1,19 @@
 from django.http import HttpResponse
 from django.views.generic import DetailView, ListView
 from django.db.models.functions import Round
-from django.db.models import Avg, Count
-from django.shortcuts import get_object_or_404
+from django.db.models import Avg, Count, F
+from django.shortcuts import get_object_or_404, redirect
 
 from movies.models import *
-from movies.forms import RatingForm
+from movies.forms import RatingForm, CommentForm
 from movies.filters import MovieFilter
+
+# Агрегация для вычисления среднего рейтинга и количества голосов
+def annotate_rating_movie(instance):
+    return instance.annotate(
+            rate=Round(Avg('movie__rate'), precision=1),
+            vote_count=Count('movie__id'),
+        )
 
 
 class MovieDetailView(DetailView):
@@ -15,13 +22,25 @@ class MovieDetailView(DetailView):
     context_object_name = 'movie'
 
     def post(self, request, **kwargs):
-        form = RatingForm(request.POST)
-        if form.is_valid():
+        form_rating = RatingForm(request.POST)
+        form_comment = CommentForm(request.POST)
+        print(request.POST)
+        if 'comment' in request.POST:
+            if form_comment.is_valid():
+                Comment.objects.update_or_create(
+                    to_movie_id = int(request.POST.get('id_movie')),
+                    user = request.user,
+                    comment = request.POST.get('comment')
+                )
+                return redirect('movies:movie_detail', slug=self.kwargs['slug'])
+            else:
+                return HttpResponse(status=400)
+            
+        if form_rating.is_valid():
             Rating.objects.update_or_create(
                 movie_id=int(request.POST.get("movie")),
                 user=self.request.user,
-                defaults={'rate_id': int(request.POST.get("rate"))}
-            )
+                defaults={'rate_id': int(request.POST.get("rate"))}                )
             return HttpResponse(status=201)
         else:
             return HttpResponse(status=400)
@@ -29,15 +48,14 @@ class MovieDetailView(DetailView):
     def get_object(self):
         queryset = Movie.objects.prefetch_related(
             'country', 'director', 'actors', 'genre'
-        ).annotate(
-            rate=Round(Avg('movie__rate'), precision=1),
-            vote_count=Count('movie')            
         )
+        queryset = annotate_rating_movie(queryset)
         return get_object_or_404(queryset, slug=self.kwargs.get('slug'))
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['rating_form'] = RatingForm()
+        context['comment_form'] = CommentForm()
 
         if self.request.user.is_authenticated:
             user_rating = Rating.objects.get(
@@ -76,12 +94,7 @@ class MovieListView(ListView):
                     filter_movie = {key: value_from_get}
                     queryset = queryset.filter(**filter_movie)
 
-        # Агрегация для вычисления среднего рейтинга и количества голосов
-        queryset = queryset.annotate(
-            rate=Round(Avg('movie__rate'), precision=1),
-            vote_count=Count('movie__id'),
-        )
-        
+        queryset = annotate_rating_movie(queryset)       
         queryset = queryset.prefetch_related(
             'movie', 'country', 'genre', 'director', 'actors'
         )

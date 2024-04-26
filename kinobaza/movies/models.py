@@ -19,6 +19,7 @@ class Movie(models.Model):
 
     QUALITY_CHOICES = [('HD', '720'), ('FULL-HD', '1080'), ('4K', '2160')]
 
+    link_movie = models.CharField(max_length=255, verbose_name='Ссылка на фильм')
     slug = models.SlugField(max_length=255, unique=True)
     poster = models.ImageField(upload_to=poster_movie_path, blank=True, null=True)
     title = models.CharField(max_length=100, verbose_name='Название фильма')
