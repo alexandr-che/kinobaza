@@ -52,7 +52,8 @@ class Comment(models.Model):
 
     class Meta:
         verbose_name = 'Комментарий'
-        verbose_name_plural = 'Комментраии'
+        verbose_name_plural = 'Комментарии'
+        ordering = ['-id']
 
     def __str__(self):
         return f'Комментарий к фильму {self.to_movie.title}'
@@ -60,7 +61,7 @@ class Comment(models.Model):
 
 class Rating(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    rate = models.ForeignKey('StarRating', on_delete=models.CASCADE)
+    rate = models.ForeignKey('StarRating', on_delete=models.CASCADE, default=0)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='movie')
 
     class Meta:

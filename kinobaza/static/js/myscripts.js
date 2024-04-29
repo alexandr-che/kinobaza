@@ -37,4 +37,4 @@ rating.addEventListener("change", function (e) {
         // .then(response => alert("Рейтинг установлен"))
         // .catch(error => alert("Ошибка"))
 });
-
+  

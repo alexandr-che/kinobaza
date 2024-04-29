@@ -24,23 +24,24 @@ class MovieDetailView(DetailView):
     def post(self, request, **kwargs):
         form_rating = RatingForm(request.POST)
         form_comment = CommentForm(request.POST)
-        print(request.POST)
+
         if 'comment' in request.POST:
             if form_comment.is_valid():
                 Comment.objects.update_or_create(
                     to_movie_id = int(request.POST.get('id_movie')),
                     user = request.user,
                     comment = request.POST.get('comment')
-                )
+                )               
                 return redirect('movies:movie_detail', slug=self.kwargs['slug'])
             else:
                 return HttpResponse(status=400)
-            
+ 
         if form_rating.is_valid():
             Rating.objects.update_or_create(
-                movie_id=int(request.POST.get("movie")),
+            movie_id=int(request.POST.get("movie")),
                 user=self.request.user,
-                defaults={'rate_id': int(request.POST.get("rate"))}                )
+                defaults={'rate_id': int(request.POST.get("rate"))}
+                )
             return HttpResponse(status=201)
         else:
             return HttpResponse(status=400)
@@ -58,10 +59,13 @@ class MovieDetailView(DetailView):
         context['comment_form'] = CommentForm()
 
         if self.request.user.is_authenticated:
-            user_rating = Rating.objects.get(
-                user=self.request.user,
-                movie=kwargs['object']
-                ).rate
+            try:
+                user_rating = Rating.objects.get(
+                    user=self.request.user,
+                    movie=kwargs['object']
+                    ).rate
+            except:
+                user_rating = 0
             if user_rating:
                 context['user_rating'] = int(str(user_rating))
 
@@ -82,6 +86,12 @@ class MovieListView(ListView):
         # Фильтрация фильмов по параметрам из GET запроса
         field_from_get = self.request.GET.get('f')
         value_from_get = self.request.GET.get('v')
+        search_from_get = self.request.GET.get('search')
+
+        if search_from_get:
+            queryset = Movie.objects.filter(
+                title__icontains=search_from_get.capitalize()
+            )
 
         if all([field_from_get, value_from_get]):
             if field_from_get == 'year':

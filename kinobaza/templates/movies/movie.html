@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load movie_tags %}
+{% load static %}
 
 
 {% block content %}
@@ -14,30 +15,16 @@
         </div>
     </div>
     <div class="row">
-        <div class="col">
-            {% include "movies/inclusions/rate.html" %}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <form method="post" name="comment">
-                {% csrf_token %}
-                <input type="hidden" value="{{movie.id}}" name="id_movie">
-                {{comment_form}}
-                <button type="submit">Отправить</button>
-            </form>
-        </div> 
-    </div>
-    <div class="row">
-        <div class="col">
+        <div class="col d-flex justify-content-center">
+            <div class="videoplayer">
                 <video
                 id="my-video"
                 class="video-js"
                 controls
                 preload="auto"
-                width="640"
-                height="264"
-                poster="MY_VIDEO_POSTER.jpg"
+                width="854"
+                height="480"
+                poster="{% static "img/logo_player/universal-logo.webp" %}"
                 data-setup="{}"
             >
                 <source src="{{ movie.link_movie }}" type="application/vnd.apple.mpegurl">
@@ -48,8 +35,32 @@
                     >supports HTML5 video</a
                 >
                 </p>
-            </video>
+                </video>
+            </div>
         </div>
+    </div>
+    <div class="row">
+        <div class="col mt-3">
+            {% include "movies/inclusions/rate.html" %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col mt-3">
+            <form method="post" name="comment">
+                {% csrf_token %}
+                <input type="hidden" value="{{movie.id}}" name="id_movie">
+                {% for field in comment_form %}
+                    <div class="fieldWrapper">
+                        {{ field.errors }}
+                        <textarea class="form-control" name="comment" rows="5" style="width: 40em;">
+                            {{ field.value }}
+                        </textarea>
+                    </div>
+                {% endfor %}
+
+                <button type="submit">Отправить</button>
+            </form>
+        </div> 
     </div>
     <div class="row">
         <div class="col">

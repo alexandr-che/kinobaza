@@ -13,6 +13,40 @@
 
   <body>
     {% load static %}
+
+
+
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Авторизация</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            {% if messages %}
+              {% for message in messages %}
+                  <div class="alert alert-danger" role="alert">
+                      {{ message }}
+                  </div>
+              {% endfor %}
+            {% endif %}
+            {% include "users/login.html" %}
+          </div>
+          <div class="modal-footer">
+              Нет аккаунта?
+              <a href="{% url "users:registration" %}">Создать аккаунт</a>
+              Забыли пароль?
+              <a href="#">Восстановить пароль</a>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="container-fluid">
       <div class="row">
         <div class="col-12">
@@ -23,14 +57,24 @@
                   <a href="#">KINOBAZA</a>
                 </div>
                 <div class="col-lg-1 d-flex align-items-center">
-                  <a href="#">Войти</a>
+                  {% if not user.is_authenticated %}
+                  <!-- Button trigger modal -->
+                    <a type="button" data-bs-toggle="modal" data-bs-target="#loginModal">
+                      Войти
+                    </a>
+                  {% else %}
+                    <form action="{% url 'users:logout' %}" method="post">
+                      {% csrf_token %}
+                      <button>Выйти</button>
+                    </form>
+                  {% endif %}
                 </div>
                 <div class="col-lg-7">
                 </div>
                 <div class="col-lg-3 d-flex align-items-center">
-                  <form class="d-flex">
-                    <input class="form-control mr-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
+                  <form class="d-flex" action="{% url "movies:movie_list" %}">
+                    <input class="form-control mr-2" type="search" name="search" placeholder="Поиск..." aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Найти</button>
                   </form>
                 </div>
               </div>
@@ -73,6 +117,8 @@
       </div>
     </div>
 
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
     <script src="{% static "js/bootstrap.bundle.min.js" %}"></script>
     <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
     <script src="{% static "js/myscripts.js" %}"></script>
