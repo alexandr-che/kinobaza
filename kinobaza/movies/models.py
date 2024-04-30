@@ -128,3 +128,23 @@ class Actor(models.Model):
 
     def __str__(self):
         return self.name
+    
+
+class Collections(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Название')
+    movies = models.ManyToManyField(Movie, verbose_name='Фильмы')
+
+    class Meta:
+        verbose_name = 'Подборка'
+        verbose_name_plural = 'Подборки'
+
+    def __str__(self):
+        return self.name
+
+
+class FavoriteMovie(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='fav_user')
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='fav_movie')
+
+    def __str__(self):
+        return f'User: {self.user.username}, Movie: {self.movie.title}'

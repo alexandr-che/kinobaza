@@ -1,6 +1,6 @@
 import django_filters
 
-from movies.models import Movie, Genre, Country
+from movies.models import Movie, Genre, Country, Collections
 
 
 class MovieFilter(django_filters.FilterSet):
@@ -27,9 +27,15 @@ class MovieFilter(django_filters.FilterSet):
         label = 'Страна'
     )
 
+    collection = django_filters.ModelMultipleChoiceFilter(
+        field_name = 'collections',
+        queryset = Collections.objects.all(),
+        label = 'Подборки'
+    )
+
     class Meta:
         model = Movie
-        fields = ['year', 'genre', 'country']
+        fields = []
 
     def filter_by_year(self, queryset, name, value):
         return queryset.filter(**{f'{name}__in': value})

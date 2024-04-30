@@ -40,25 +40,24 @@
         </div>
     </div>
     <div class="row">
-        <div class="col mt-3">
+        <div class="col mt-3 justify-content-end">
             {% include "movies/inclusions/rate.html" %}
         </div>
     </div>
     <div class="row">
-        <div class="col mt-3">
+        <div class="col mt-3 form-comment">
             <form method="post" name="comment">
                 {% csrf_token %}
                 <input type="hidden" value="{{movie.id}}" name="id_movie">
-                {% for field in comment_form %}
-                    <div class="fieldWrapper">
-                        {{ field.errors }}
-                        <textarea class="form-control" name="comment" rows="5" style="width: 40em;">
-                            {{ field.value }}
-                        </textarea>
+                <div class="row">
+                    <div class="col mb-3">
+                        <textarea class="form-control"
+                        name="comment" id="id_comment" rows="5"
+                        placeholder="Оставьте свой комментарий"
+                        style="resize: none;"></textarea>
                     </div>
-                {% endfor %}
-
-                <button type="submit">Отправить</button>
+                </div>
+                <button class="btn btn-secondary" type="submit">Отправить</button>
             </form>
         </div> 
     </div>

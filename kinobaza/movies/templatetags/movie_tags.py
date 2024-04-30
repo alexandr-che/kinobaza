@@ -28,7 +28,3 @@ def show_genres():
 def show_years():
     years = Movie.objects.values_list('year', flat=True).order_by('year')
     return {'years': years}
-
-@register.filter
-def my_range(value):
-    return range(int(value))

@@ -1,17 +1,14 @@
 <form action="{% url "users:login" %}" method="post">
     {% csrf_token %}
-    {% if form.errors %}
-        erwerwer
-    {% endif %}
     <div class="mb-3">
-      <label for="exampleInputEmail1" class="form-label">Логин</label>
+      <label for="exampleInputEmail1" class="form-label text-dark">Логин</label>
       <input type="text" name="username" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
     </div>
     <div class="mb-3">
-      <label for="exampleInputPassword1" class="form-label">Пароль</label>
+      <label for="exampleInputPassword1" class="form-label text-dark">Пароль</label>
       <input type="password" name="password" class="form-control" id="exampleInputPassword1">
     </div>
     <div class="button-login d-flex justify-content-center">
-        <button type="submit" class="btn btn-primary">Войти в аккаунт</button>
+        <button type="submit" class="btn btn-dark">Войти в аккаунт</button>
     </div>
 </form>

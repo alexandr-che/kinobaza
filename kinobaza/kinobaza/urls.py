@@ -6,6 +6,7 @@ import debug_toolbar
 
 from kinobaza import settings
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('movies/', include('movies.urls', namespace='movies')),

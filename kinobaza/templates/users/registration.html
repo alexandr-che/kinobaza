@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+<h3>Регистрация</h3>
+
+{% if form.errors %}
+    <div class="d-block alert alert-danger width-30" role="alert">
+        {% for field in form %}
+            {% for error in field.errors %}
+                <b>{{ field.label }}</b>: {{ error }}<br>
+            {% endfor %}
+        {% endfor %}
+    </div>
+{% endif %}
+
+<form action="{% url "users:registration" %}" method="post">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col">
+            <p>
+                Логин<br>
+                <input type="text" name="username" class="form-control"
+                value="{% if form.username.value %}{{form.username.value}}{% endif %}"
+                required>
+            </p>
+            <p>
+                Email<br>
+                <input type="email" name="email" class="form-control"
+                value="{% if form.email.value %}{{form.email.value}}{% endif %}"
+                required>
+            </p>
+        <div class="col">
+            <p>
+                Аватар (необязательно)<br>
+                <input type="file" name="email" class="form-control"
+                value="{% if form.file.value %}{{form.file.value}}{% endif %}">
+            </p>
+        </div>
+        </div>
+        <div class="col">
+            <p>
+                Пароль<br>
+                <input type="password" name="password1" class="form-control"
+                required>
+            </p>
+            <p>
+                Пароль ещё раз<br>
+                <input type="password" name="password2" class="form-control"
+                required>
+            </p>
+            <p>
+                <div class="position-relative">
+                    <div class="position-absolute bottom-2 end-50">
+                        <button type="submit" class="btn btn-secondary">Регистрация</button>
+
+                    </div>
+                </div>
+            </p>
+        </div>
+    </div>
+</form>
+
+{% endblock content %}

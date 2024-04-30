@@ -14,19 +14,15 @@
   <body>
     {% load static %}
 
-
-
-
-
     <!-- Modal -->
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Авторизация</h5>
+          <div class="modal-header bg-secondary text-white">
+            <h5 class="modal-title text-dark" id="exampleModalLabel">Авторизация</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="modal-body">
+          <div class="modal-body bg-secondary text-white">
             {% if messages %}
               {% for message in messages %}
                   <div class="alert alert-danger" role="alert">
@@ -36,11 +32,13 @@
             {% endif %}
             {% include "users/login.html" %}
           </div>
-          <div class="modal-footer">
+          <div class="modal-footer justify-content-center bg-secondary text-white">
+            <p class="fs-6 fw-lighter">
               Нет аккаунта?
-              <a href="{% url "users:registration" %}">Создать аккаунт</a>
+              <a href="{% url "users:registration" %}" class="text-dark">Создать аккаунт</a><br>
               Забыли пароль?
-              <a href="#">Восстановить пароль</a>
+              <a href="#" class="text-dark">Восстановить пароль</a>
+            </p>
           </div>
           </div>
         </div>
@@ -82,11 +80,12 @@
           </header>
         </div>
       </div>
+      {% include "messages.html" %}
   
       <div class="page-logo">
         <div class="row justify-items-center">
           <div class="col-12 align-content-center">
-            <img src="/static/img/universal_logo.webp">
+            <img class="img-fluid" src="/static/img/universal_logo.webp">
           </div>
         </div>
       </div>

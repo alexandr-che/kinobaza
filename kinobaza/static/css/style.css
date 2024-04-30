@@ -66,12 +66,26 @@ body {
     color: #a8a89c;
 }
 
-.link-tags {
+.link-tags a{
     color: #e4f0e7;
+}
+
+.link-tags a:hover{
+    color: #a8a89c;
+}
+
+.rating-page {
+    display: block;
+    justify-content: right;
+    /* background-color: aliceblue; */
 }
 
 .count-vote {
     font-size:x-small;
+}
+
+.fav-movie img{
+    width: 3em;
 }
 
 .movie-desc {
@@ -125,25 +139,6 @@ body {
 .footer {
     background-color: rgb(71, 135, 255);
 }
-
-/* Скрыть стандартные радио кнопки */
-/* .rate input[type="radio"] {
-    display: none;
-} */
-
-/* rate */
-/* .rate {
-    display: inline-block;
-}
-
-.icon-label {
-    cursor: pointer;
-}
-
-.icon-label:hover svg,
-.icon-label input:checked ~ svg {
-    fill: gold;
-} */
 
 /* Checkbox stars */
 .star-on{

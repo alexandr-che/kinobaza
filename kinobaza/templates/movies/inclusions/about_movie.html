@@ -1,35 +1,42 @@
 {% load static %}
+
 <div class="about-movie m-1">
     <div class="movie-header mb-2">                
         <div class="row">
             <div class="col-6">
-                <div class="title-movie">
-                    <span class="link-title-movie">
-                        <a href="{% url "movies:movie_detail" slug=movie.slug %}">
-                            {{ movie.title }} ({{ movie.year }})
-                        </a>
-                    </span>
+                <div class="title-movie link-title-movie">
+                    <a href="{% url "movies:movie_detail" slug=movie.slug %}">
+                        {{ movie.title }} ({{ movie.year }})
+                    </a>
                 </div>
             </div>
-            <div class="col-3"></div>
+            <div class="col-2"></div>
             <div class="col-3">
-
-                
-                {% with rate=movie.rate %}
-                    {% for i in "12345" %}
-                        {% if forloop.counter <= rate %}
-                            <img src="{% static "img/icons/star-on-big.png" %}">
-                        {% else %}
-                            <img src="{% static "img/icons/star-off-big.png" %}">
-                        {% endif %}
-                    {% endfor %}
-                <p>Рейтинг {{ rate|default_if_none:"0" }}</p>
-                {% endwith %}
-
-                <div class="count-vote">
-                    {{ movie.vote_count }} голосов
-                </div>
+                <div class="rating-page">
+                    {% with rate=movie.rate %}
+                        {% for i in "12345" %}
+                            {% if forloop.counter <= rate %}
+                                <img src="{% static "img/icons/star-on-big.png" %}">
+                            {% else %}
+                                <img src="{% static "img/icons/star-off-big.png" %}">
+                            {% endif %}
+                        {% endfor %}<br>
+                    Рейтинг {{ rate|default_if_none:"0" }}
+                    {% endwith %}
+    
+                    <div class="count-vote">
+                        Голосов ({{ movie.vote_count }})
+                    </div>
+                </div>              
             </div>
+            <div class="col-1 fav-movie">
+                {% if movie.is_favorite %}
+                    <img src="{% static "img/icons/bookmark_on.png" %}" class="img-fluid">
+                {% else %}
+                    <img src="{% static "img/icons/bookmark_off.png" %}" class="img-fluid">
+                {% endif %}
+            </div>
+            
         </div>
     </div>
     <div class="row">

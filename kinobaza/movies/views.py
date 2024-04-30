@@ -1,18 +1,25 @@
 from django.http import HttpResponse
 from django.views.generic import DetailView, ListView
 from django.db.models.functions import Round
-from django.db.models import Avg, Count, F
+from django.db.models import Avg, Count, Case, When, BooleanField, Value
 from django.shortcuts import get_object_or_404, redirect
 
 from movies.models import *
-from movies.forms import RatingForm, CommentForm
+from movies.forms import RatingForm, CommentForm, FavoriteForm
 from movies.filters import MovieFilter
 
-# Агрегация для вычисления среднего рейтинга и количества голосов
-def annotate_rating_movie(instance):
-    return instance.annotate(
+# Аннотация среднего рейтинга, количества голосов, есть ли фильм в избранном
+def annotate_rating_movie(self, qs):
+    fav_movie_user = FavoriteMovie.objects.filter(user=self.request.user)
+    fav_movie_user = [movie_in_fav.movie.pk for movie_in_fav in fav_movie_user]
+    return qs.annotate(
             rate=Round(Avg('movie__rate'), precision=1),
             vote_count=Count('movie__id'),
+            is_favorite=Case(
+                When(pk__in=fav_movie_user, then=Value(True)),
+                default=Value(False),
+                output_field=BooleanField()
+            )
         )
 
 
@@ -24,6 +31,7 @@ class MovieDetailView(DetailView):
     def post(self, request, **kwargs):
         form_rating = RatingForm(request.POST)
         form_comment = CommentForm(request.POST)
+        form_favorite = FavoriteForm(request.POST)
 
         if 'comment' in request.POST:
             if form_comment.is_valid():
@@ -50,7 +58,7 @@ class MovieDetailView(DetailView):
         queryset = Movie.objects.prefetch_related(
             'country', 'director', 'actors', 'genre'
         )
-        queryset = annotate_rating_movie(queryset)
+        queryset = annotate_rating_movie(self, queryset)
         return get_object_or_404(queryset, slug=self.kwargs.get('slug'))
     
     def get_context_data(self, **kwargs):
@@ -66,8 +74,8 @@ class MovieDetailView(DetailView):
                     ).rate
             except:
                 user_rating = 0
-            if user_rating:
-                context['user_rating'] = int(str(user_rating))
+        
+            context['user_rating'] = int(str(user_rating))
 
         return context
     
@@ -104,9 +112,9 @@ class MovieListView(ListView):
                     filter_movie = {key: value_from_get}
                     queryset = queryset.filter(**filter_movie)
 
-        queryset = annotate_rating_movie(queryset)       
+        queryset = annotate_rating_movie(self, queryset)      
         queryset = queryset.prefetch_related(
-            'movie', 'country', 'genre', 'director', 'actors'
+            'movie', 'country', 'genre', 'director', 'actors',
         )
 
         return queryset

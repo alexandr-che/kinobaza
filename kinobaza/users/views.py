@@ -1,16 +1,12 @@
+from django.views.generic import CreateView
 from django.contrib import auth, messages
+from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import redirect
-from django.http import HttpResponse, JsonResponse
 
-from users.forms import UserLoginForm
+from users.forms import UserRegistrationForm
+from users.models import User
 
-
-# class UserLogin(SuccessMessageMixin, LoginView):
-#     template_name = 'users/login.html'
-#     form_class = UserLoginForm
-#     success_url = reverse_lazy('movies:movie_list')
-#     success_message = 'Добро пожаловать, %(username)s!'
 
 def login(request):
     if request.method == 'POST':
@@ -19,7 +15,7 @@ def login(request):
         user = auth.authenticate(username=username, password=password)
         if user:
             auth.login(request, user)
-            message = messages.success(request, f'Добро пожаловать {user.username}!')
+            messages.success(request, f'Добро пожаловать {user.username}!')
             return redirect(reverse('movies:movie_list'))
         else:
             messages.error(
@@ -33,5 +29,21 @@ def logout(request):
     return redirect(reverse('movies:movie_list'))
 
 
-def registration():
-    ...
+class UserRegistrationView(SuccessMessageMixin, CreateView):
+    model = User
+    template_name = 'users/registration.html'
+    form_class = UserRegistrationForm
+    success_message = 'Вы успешно зарегистрировались и вошли в аккаунт'
+
+    def form_valid(self, form):
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password1']
+            user = auth.authenticate(username=username, password=password)
+
+            if user:
+                auth.login(self.request, user)
+                return redirect(reverse('movies:movie_list'))
+        else:
+            self.form_invalid(form)
