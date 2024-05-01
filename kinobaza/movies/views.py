@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.http import HttpResponse
 from django.views.generic import DetailView, ListView
 from django.db.models.functions import Round
@@ -9,18 +10,37 @@ from movies.forms import RatingForm, CommentForm, FavoriteForm
 from movies.filters import MovieFilter
 
 # Аннотация среднего рейтинга, количества голосов, есть ли фильм в избранном
+# Запросы кэшируются с помощью redis
 def annotate_rating_movie(self, qs):
-    fav_movie_user = FavoriteMovie.objects.filter(user=self.request.user)
-    fav_movie_user = [movie_in_fav.movie.pk for movie_in_fav in fav_movie_user]
-    return qs.annotate(
-            rate=Round(Avg('movie__rate'), precision=1),
-            vote_count=Count('movie__id'),
-            is_favorite=Case(
-                When(pk__in=fav_movie_user, then=Value(True)),
-                default=Value(False),
-                output_field=BooleanField()
-            )
-        )
+
+    cache_name = 'agregate_qs'
+    cache_annotate_qs = cache.get(cache_name)
+
+    if cache_annotate_qs:
+        return cache_annotate_qs
+    else:
+        if self.request.user.is_authenticated:
+            fav_movie_user = FavoriteMovie.objects.filter(user=self.request.user)
+            fav_movie_user = [movie_in_fav.movie.pk for movie_in_fav in fav_movie_user]
+        else:
+            fav_movie_user = False
+
+        qs = qs.annotate(
+                rate=Round(Avg('movie__rate'), precision=1),
+                vote_count=Count('movie__id')
+                )
+
+        if fav_movie_user:
+            qs.annotate(
+                is_favorite=Case(
+                    When(pk__in=fav_movie_user, then=Value(True)),
+                    default=Value(False),
+                    output_field=BooleanField()
+                    )
+                )
+
+        cache.set(cache_name, qs, 120)
+        return qs
 
 
 class MovieDetailView(DetailView):
@@ -112,7 +132,7 @@ class MovieListView(ListView):
                     filter_movie = {key: value_from_get}
                     queryset = queryset.filter(**filter_movie)
 
-        queryset = annotate_rating_movie(self, queryset)      
+        queryset = annotate_rating_movie(self, queryset)
         queryset = queryset.prefetch_related(
             'movie', 'country', 'genre', 'director', 'actors',
         )
