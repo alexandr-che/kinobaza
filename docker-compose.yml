@@ -1,0 +1,30 @@
+version: '3.6'
+
+services:
+  web-app:
+    build: .
+    container_name: web-app
+    ports:
+      - 8000:8000
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - /home/alexandr/Документы/Learn/django/movies/kinobaza/kinobaza:/app
+    environment:
+      - REDIS_HOST_NAME=redis
+    depends_on:
+      - redis
+    networks:
+      - djangonet
+
+  redis:
+    image: redis
+    container_name: web-redis
+    ports:
+      - 6379:6379
+    networks:
+      - djangonet
+
+networks:
+  djangonet:
+    name: djangonet
+    driver: bridge
